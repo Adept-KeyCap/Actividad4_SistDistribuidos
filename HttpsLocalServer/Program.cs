@@ -54,9 +54,12 @@ async void HandleRequest(HttpListenerContext context)
         {
             SendResponse("{\"msg\": \"usuario o contraseña no son correctos - username\"}", 400, response);
         }
-        else//Validaciones superadas
+        else
         {
+            //Validación superada
+
             var usuarioDB = usersList.First(u => u.username == authData.username);
+
             if (usuarioDB.password != authData.password)
             {
                 SendResponse("{\"msg\": \"usuario o contraseña no son correctos - password\"}", 400, response);
@@ -83,6 +86,7 @@ async void HandleRequest(HttpListenerContext context)
         if (string.IsNullOrEmpty(usuario?.username))
         {
             SendResponse("{\"msg\": \"debe enviar el campo username en la petición\",\"field\": \"username\"}", 400, response);
+
         }
         else if (string.IsNullOrEmpty(usuario.password))
         {
@@ -92,13 +96,13 @@ async void HandleRequest(HttpListenerContext context)
         else if (usersList.Any(u => u.username == usuario.username))
         {
             SendResponse("{\"msg\": \"El usuario ya existe\"}", 400, response);
+
         }
         else
         {
             usersList.Add(usuario);
             var usuarioDB = usersList.First(u => u.username == usuario.username);
-            AuthResponse authResponse = new AuthResponse(usuarioDB);
-            string contentResponse = JsonConvert.SerializeObject(authResponse.token);
+
 
             SendResponse("{\"msg\": \"El usuario ha sido generado\"}", 201, response);
         }
